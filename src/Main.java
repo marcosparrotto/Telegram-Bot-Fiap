@@ -19,7 +19,7 @@ public class Main {
 	public static void main(String[] args) {
 
 		//Criação do objeto bot com as informações de acesso
-		TelegramBot bot = TelegramBotAdapter.build("1420962598:AAFotwRIisL_BVSRP-WUAtBjPNUhZKUgj00");
+		TelegramBot bot = TelegramBotAdapter.build(Config.Token);
 
 		//objeto responsável por receber as mensagens
 		GetUpdatesResponse updatesResponse;
