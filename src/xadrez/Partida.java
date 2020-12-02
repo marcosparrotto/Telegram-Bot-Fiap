@@ -86,7 +86,7 @@ public class Partida {
 
 		if (testarCheck(jogadorAtual)) {
 			desfazerMovimento(origem, destino, peçaCapturada);
-			throw new XadrezException("Nao pode se colocar/continuar em Check!");
+			throw new XadrezException("Não pode se colocar/continuar em Check!");
 		}
 
 		PeçaXadrez peçaMovida = (PeçaXadrez) tabuleiro.peça(destino);
@@ -122,7 +122,7 @@ public class Partida {
 	
 	public PeçaXadrez alterarPeçaPromovida(String type) {
 		if(promovida == null) {
-			throw new IllegalStateException("Nao ha peca promovida");
+			throw new IllegalStateException("Não há peça promovida");
 		}
 		if(!type.equals("T") && !type.equals("C") && !type.equals("B") && !type.equals("D")) {
 			return promovida;
@@ -234,19 +234,19 @@ public class Partida {
 
 	private void validarPosiçãoOrigem(Posição posição) {
 		if (!tabuleiro.existePeça(posição)) {
-			throw new XadrezException("Nao ha peca nesta posicao");
+			throw new XadrezException("Não há peça nesta posição");
 		}
 		if (jogadorAtual != ((PeçaXadrez) tabuleiro.peça(posição)).getCor()) {
-			throw new XadrezException("Escolha uma peca sua");
+			throw new XadrezException("Escolha uma peça sua");
 		}
 		if (!tabuleiro.peça(posição).haMovimentoPossivel()) {
-			throw new XadrezException("Nao ha movimentos possiveis para peca escolhida");
+			throw new XadrezException("Não há movimentos possiveis para peça escolhida");
 		}
 	}
 
 	private void validarPosiçãoDestino(Posição origem, Posição destino) {
 		if (!tabuleiro.peça(origem).possivelMovimento(destino)) {
-			throw new XadrezException("A peca escolhida nao pode se mover para posicao de destino");
+			throw new XadrezException("A peça escolhida não pode se mover para posição de destino");
 		}
 	}
 

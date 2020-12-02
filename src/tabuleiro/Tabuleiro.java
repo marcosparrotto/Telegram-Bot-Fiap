@@ -24,7 +24,7 @@ public class Tabuleiro {
 	
 	public Peça peça(int linha, int coluna) {
 		if(!posiçãoExiste(linha, coluna)) {
-			throw new TabuleiroException("Posicao invalida");
+			throw new TabuleiroException("Posição invalida");
 		}
 		return peças[linha][coluna];
 	}
@@ -35,7 +35,7 @@ public class Tabuleiro {
 	
 	public void lugarPeça(Peça peça, Posição posição) {
 		if(existePeça(posição)) {
-			throw new TabuleiroException("Já tem uma peca nessa posicao");
+			throw new TabuleiroException("Já tem uma peça nessa posição");
 		}
 		peças[posição.getLinha()][posição.getColuna()] = peça;
 		peça.posição = posição;
@@ -43,7 +43,7 @@ public class Tabuleiro {
 	
 	public Peça removerPeça(Posição posição) {
 		if(!posiçãoExiste(posição)) {
-			throw new TabuleiroException("Posicao invalida");
+			throw new TabuleiroException("Posição invalida");
 		}
 		if(peça(posição)==null) {
 			return null;
@@ -64,7 +64,7 @@ public class Tabuleiro {
 	
 	public boolean existePeça(Posição posição) {
 		if(!posiçãoExiste(posição)) {
-			throw new TabuleiroException("Posicao invalida");
+			throw new TabuleiroException("Posição invalida");
 		}
 		return peça(posição) != null;
 	}

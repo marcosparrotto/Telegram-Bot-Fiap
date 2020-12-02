@@ -103,12 +103,12 @@ public class Main {
 										answer + "\n\n" + "Digite a posição de destino");
 								estadoEsperado = 2;
 							} catch (XadrezException e) {
-								answer = e.getMessage();
+								answer = e.getMessage()+ "\nTente novamente...";
 							} catch (InputMismatchException e) {
-								answer = e.getMessage();
+								answer = e.getMessage() + "\nTente novamente...";
 							}
 							catch (RuntimeException e) {
-								answer = "Erro lendo posicao no Xadrez, valores validos a-h 1-8";
+								answer = "Erro lendo posicao no Xadrez, valores validos a-h 1-8"+ "\nTente novamente...";
 							}
 							break;
 						case 2: // Esperando posição destino
@@ -136,12 +136,12 @@ public class Main {
 									answer = EmojiParser.parseToUnicode(answer);
 								}
 							}  catch (XadrezException e) {
-								answer = e.getMessage();
+								answer = e.getMessage()+ "\nTente novamente...";
 							} catch (InputMismatchException e) {
-								answer = e.getMessage();
+								answer = e.getMessage()+ "\nTente novamente...";
 							}
 							catch (RuntimeException e) {
-								answer = "Erro lendo posicao no Xadrez, valores validos a-h 1-8";
+								answer = "Erro lendo posicao no Xadrez, valores validos a-h 1-8"+ "\nTente novamente...";
 							}
 							break;
 						case 3: // Esperando peça promovida

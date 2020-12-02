@@ -8,7 +8,7 @@ public class PosiçãoXadrez {
 	
 	public PosiçãoXadrez(char coluna, int linha) {
 		if(coluna < 'a' || coluna > 'h' || linha < 1 || linha >8) {
-			throw new XadrezException("Erro na posicao do xadrez");
+			throw new XadrezException("Erro na posição do xadrez");
 		}
 		this.coluna = coluna;
 		this.linha = linha;
