@@ -63,9 +63,9 @@ public class UI {
 			}
 		} else {
 			if (peça == null) {
-				armazenaTexto = armazenaTexto + "\u2666";
+				armazenaTexto = armazenaTexto + "\u2756";
 			} else {
-				armazenaTexto = armazenaTexto + "**" + peça +"**";
+				armazenaTexto = armazenaTexto  + peça;
 			}
 		}
 		armazenaTexto = armazenaTexto + " ";
