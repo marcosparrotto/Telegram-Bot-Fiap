@@ -8,60 +8,175 @@ import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.BaseResponse;
 import com.pengrad.telegrambot.response.GetUpdatesResponse;
 import com.pengrad.telegrambot.response.SendResponse;
+import com.vdurmont.emoji.EmojiParser;
+
+import app.UI;
+import xadrez.Partida;
+import xadrez.PeçaXadrez;
+import xadrez.PosiçãoXadrez;
+import xadrez.XadrezException;
+
+import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.List;
 
-
 //https://web.telegram.org/#/im?p=@fiap_38SCJ_bot
-
 
 public class Main {
 
 	public static void main(String[] args) {
 
-		//Criação do objeto bot com as informações de acesso
+		// variaveis do xadrez
+		Partida partida = new Partida();
+		List<PeçaXadrez> capturadas = new ArrayList<>();
+		PosiçãoXadrez origem = null;
+		PosiçãoXadrez destino;
+
+		// Menu de opções do BOT
+		int menu = 0;
+		// 0 - menu
+		// 1 - xadrez
+
+		// RespostaEsperada Xadrez
+		int estadoEsperado = 0;
+		// 1 - origem
+		// 2 - destino
+		// 3 - pomoção peão
+
+		// Criação do objeto bot com as informações de acesso
 		TelegramBot bot = TelegramBotAdapter.build(Config.Token);
 
-		//objeto responsável por receber as mensagens
+		// objeto responsável por receber as mensagens
 		GetUpdatesResponse updatesResponse;
-		//objeto responsável por gerenciar o envio de respostas
+		// objeto responsável por gerenciar o envio de respostas
 		SendResponse sendResponse;
-		//objeto responsável por gerenciar o envio de ações do chat
+		// objeto responsável por gerenciar o envio de ações do chat
 		BaseResponse baseResponse;
-		
-		//controle de off-set, isto é, a partir deste ID será lido as mensagens pendentes na fila
-		int m=0;
-		
-		//loop infinito pode ser alterado por algum timer de intervalo curto
-		while (true){
-		
-			//executa comando no Telegram para obter as mensagens pendentes a partir de um off-set (limite inicial)
-			updatesResponse =  bot.execute(new GetUpdates().limit(100).offset(m));
-			
-			//lista de mensagens
+
+		// controle de off-set, isto é, a partir deste ID será lido as mensagens
+		// pendentes na fila
+		int m = 0;
+
+		// loop infinito pode ser alterado por algum timer de intervalo curto
+		while (true) {
+
+			// executa comando no Telegram para obter as mensagens pendentes a partir de um
+			// off-set (limite inicial)
+			updatesResponse = bot.execute(new GetUpdates().limit(100).offset(m));
+
+			// lista de mensagens
 			List<Update> updates = updatesResponse.updates();
 
-			//análise de cada ação da mensagem
-			for (Update update : updates) {
-				
-				//atualização do off-set
-				m = update.updateId()+1;
-				
-				System.out.println("Recebendo mensagem: "+ update.message().text());
-				
-				//envio de "Escrevendo" antes de enviar a resposta
-				baseResponse = bot.execute(new SendChatAction(update.message().chat().id(), ChatAction.typing.name()));
-				//verificação de ação de chat foi enviada com sucesso
-				System.out.println("Resposta de Chat Action Enviada: " + baseResponse.isOk());
-				
-				//envio da mensagem de resposta
-				sendResponse = bot.execute(new SendMessage(update.message().chat().id(),"Não entendi..."));
-				//verificação de mensagem enviada com sucesso
-				System.out.println("Mensagem Enviada: " +sendResponse.isOk());
-				
+			if (updates != null) {
+				// análise de cada ação da mensagem
+				for (Update update : updates) {
+
+					// atualização do off-set
+					m = update.updateId() + 1;
+					String answer = "Erro!";
+					String mensagem = update.message().text();
+					try {
+					switch (menu) {
+					case 0: // Menu
+						if (mensagem.equals("/startXadrez")) {
+							menu = 1;
+							partida = new Partida();
+							capturadas = new ArrayList<>();
+							answer = UI.printPartida(partida, capturadas);
+							answer = EmojiParser.parseToUnicode("Vamos começar o xadrez! \n\n" + answer
+									+ "Digite a **posição da peça** que você gostaria de mover");
+							estadoEsperado = 1;
+						} else {
+							answer = EmojiParser.parseToUnicode("Escolha entre: \n -/startXadrez \n -outros");
+						}
+						break;
+					case 1: // xadrez iniciado
+						switch (estadoEsperado) {
+						case 1: // Esperando posição origem
+							try {
+								char coluna = mensagem.charAt(0);
+								int linha = Integer.parseInt(mensagem.substring(1));
+								origem = new PosiçãoXadrez(coluna, linha);
+								boolean[][] possiveisMovimentos = partida.possiveisMovimentos(origem);
+								answer = UI.printTabuleiro(partida.getPeças(), possiveisMovimentos);
+								answer = EmojiParser.parseToUnicode(
+										answer + "\n\n" + "Digite a posição de destino");
+								estadoEsperado = 2;
+							} catch (RuntimeException e) {
+								answer = "Erro lendo posicao no Xadrez, valores validos a-h 1-8";
+							}
+							break;
+						case 2: // Esperando posição destino
+							try {
+								char coluna = mensagem.charAt(0);
+								int linha = Integer.parseInt(mensagem.substring(1));
+								destino = new PosiçãoXadrez(coluna, linha);
+								PeçaXadrez peçaCapturada = partida.executarMovimentoXadrez(origem, destino);
+								if (peçaCapturada != null) {
+									capturadas.add(peçaCapturada);
+								}
+
+								if (partida.getpromovida() != null) {
+									estadoEsperado = 3;
+									answer = "Escolha entre (T/C/B/D) para promover";
+								} else {
+									answer = UI.printPartida(partida, capturadas);
+									if(partida.getCheckMate()) {
+										menu = 0;
+										estadoEsperado = 0;
+									} else {
+										answer = answer + "\nDigite posição da peça que você gostaria de mover";
+										estadoEsperado = 1;
+									}
+									answer = EmojiParser.parseToUnicode(answer);
+								}
+							} catch (RuntimeException e) {
+								answer = "Erro lendo posicao no Xadrez, valores validos a-h 1-8";
+							}
+							break;
+						case 3: // Esperando peça promovida
+							String type = mensagem.toUpperCase();
+							if(!type.equals("T") && !type.equals("C") && !type.equals("B") && !type.equals("D")){
+								answer = EmojiParser.parseToUnicode("Tipo não encontrado! \nEscolha entre (T/C/B/D) para promover");
+							} else {
+								partida.alterarPeçaPromovida(type);
+								answer = UI.printPartida(partida, capturadas);
+								if(partida.getCheckMate()) {
+									menu = 0;
+									estadoEsperado = 0;
+								} else {
+									answer = answer + "\nDigite posição da peça que você gostaria de mover";
+									estadoEsperado = 1;
+								}
+								answer = EmojiParser.parseToUnicode(answer);
+							}
+							break;
+						}
+						break;
+					default:
+						answer = EmojiParser.parseToUnicode("Escolha entre /startXadrez" + " menu: " + menu);
+					}
+					} catch (XadrezException e) {
+						answer = e.getMessage();
+					} catch (InputMismatchException e) {
+						answer = e.getMessage();
+					} finally {
+						System.out.println("Recebendo mensagem: " + mensagem);
+
+						// envio de "Escrevendo" antes de enviar a resposta
+						baseResponse = bot
+								.execute(new SendChatAction(update.message().chat().id(), ChatAction.typing.name()));
+						// verificação de ação de chat foi enviada com sucesso
+						System.out.println("Resposta de Chat Action Enviada: " + baseResponse.isOk());
+
+						sendResponse = bot.execute(new SendMessage(update.message().chat().id(), answer));
+						// verificação de mensagem enviada com sucesso
+						System.out.println("Mensagem Enviada: " + sendResponse.isOk());	
+					}
+				}
 			}
 
 		}
 
 	}
-
 }
