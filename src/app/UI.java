@@ -16,7 +16,7 @@ public class UI {
 		armazenaTexto = armazenaTexto + printPeçasCapturadas(capturadas) + "\n";
 		armazenaTexto = armazenaTexto + "Turno: " + partida.getTurno() + "\n";
 		if (!partida.getCheckMate()) {
-			System.out.println("Esperando jogador: " + partida.getJogadorAtual());
+			armazenaTexto = armazenaTexto + "\nEsperando jogador: " + partida.getJogadorAtual();
 			if (partida.getCheck()) {
 				armazenaTexto = armazenaTexto + "\n" + "CHECK!!" + "\n";
 			}
@@ -57,7 +57,7 @@ public class UI {
 		String armazenaTexto = "";
 		if (!corLetra) {
 			if (peça == null) {
-				armazenaTexto = armazenaTexto + "\u2662";
+				armazenaTexto = armazenaTexto + "\u26CB";
 			} else {
 				armazenaTexto = armazenaTexto + peça;
 			}

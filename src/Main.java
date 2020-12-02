@@ -84,7 +84,7 @@ public class Main {
 							capturadas = new ArrayList<>();
 							answer = UI.printPartida(partida, capturadas);
 							answer = EmojiParser.parseToUnicode("Vamos começar o xadrez! \n\n" + answer
-									+ "Digite a **posição da peça** que você gostaria de mover");
+									+ "\n\nDigite a posição da peça que você gostaria de mover");
 							estadoEsperado = 1;
 						} else {
 							answer = EmojiParser.parseToUnicode("Escolha entre: \n -/startXadrez \n -outros");
@@ -102,7 +102,12 @@ public class Main {
 								answer = EmojiParser.parseToUnicode(
 										answer + "\n\n" + "Digite a posição de destino");
 								estadoEsperado = 2;
-							} catch (RuntimeException e) {
+							} catch (XadrezException e) {
+								answer = e.getMessage();
+							} catch (InputMismatchException e) {
+								answer = e.getMessage();
+							}
+							catch (RuntimeException e) {
 								answer = "Erro lendo posicao no Xadrez, valores validos a-h 1-8";
 							}
 							break;
@@ -130,7 +135,12 @@ public class Main {
 									}
 									answer = EmojiParser.parseToUnicode(answer);
 								}
-							} catch (RuntimeException e) {
+							}  catch (XadrezException e) {
+								answer = e.getMessage();
+							} catch (InputMismatchException e) {
+								answer = e.getMessage();
+							}
+							catch (RuntimeException e) {
 								answer = "Erro lendo posicao no Xadrez, valores validos a-h 1-8";
 							}
 							break;
