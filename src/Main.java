@@ -94,7 +94,7 @@ public class Main {
 						switch (estadoEsperado) {
 						case 1: // Esperando posição origem
 							try {
-								char coluna = mensagem.charAt(0);
+								char coluna = mensagem.toLowerCase().charAt(0);
 								int linha = Integer.parseInt(mensagem.substring(1));
 								origem = new PosiçãoXadrez(coluna, linha);
 								boolean[][] possiveisMovimentos = partida.possiveisMovimentos(origem);
@@ -113,7 +113,7 @@ public class Main {
 							break;
 						case 2: // Esperando posição destino
 							try {
-								char coluna = mensagem.charAt(0);
+								char coluna = mensagem.toLowerCase().charAt(0);
 								int linha = Integer.parseInt(mensagem.substring(1));
 								destino = new PosiçãoXadrez(coluna, linha);
 								PeçaXadrez peçaCapturada = partida.executarMovimentoXadrez(origem, destino);
