@@ -11,6 +11,8 @@ import com.pengrad.telegrambot.response.SendResponse;
 import com.vdurmont.emoji.EmojiParser;
 
 import app.UI;
+import cep.BuscarCEP;
+import cep.service.BuscarCEPService;
 import xadrez.Partida;
 import xadrez.PeçaXadrez;
 import xadrez.PosiçãoXadrez;
@@ -24,7 +26,7 @@ import java.util.List;
 
 public class Main {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 
 		// variaveis do xadrez
 		Partida partida = new Partida();
@@ -36,12 +38,14 @@ public class Main {
 		int menu = 0;
 		// 0 - menu
 		// 1 - xadrez
+		// 2 - Consulta CEP
 
 		// RespostaEsperada Xadrez
 		int estadoEsperado = 0;
 		// 1 - origem
 		// 2 - destino
 		// 3 - pomoção peão
+		// 4 - Consulta CEP
 
 		// Criação do objeto bot com as informações de acesso
 		TelegramBot bot = TelegramBotAdapter.build(Config.Token);
@@ -75,6 +79,7 @@ public class Main {
 					m = update.updateId() + 1;
 					String answer = "Erro!";
 					String mensagem = update.message().text();
+
 					try {
 					switch (menu) {
 					case 0: // Menu
@@ -86,8 +91,14 @@ public class Main {
 							answer = EmojiParser.parseToUnicode("Vamos começar o xadrez! \n\n" + answer
 									+ "\n\nDigite a posição da peça que você gostaria de mover");
 							estadoEsperado = 1;
-						} else {
-							answer = EmojiParser.parseToUnicode("Escolha entre: \n -/startXadrez \n -outros");
+						}else if(mensagem.equals("/startCEP")) {	
+							menu = 2;
+							answer = EmojiParser.parseToUnicode("\n\n" + "Informe o CEP");
+							System.out.println("CEP" + mensagem);
+							estadoEsperado = 4;
+		
+						}else {
+							answer = EmojiParser.parseToUnicode("Escolha entre: \n -/startXadrez \n -/startCEP");
 						}
 						break;
 					case 1: // xadrez iniciado
@@ -163,14 +174,28 @@ public class Main {
 							break;
 						}
 						break;
-					default:
-						answer = EmojiParser.parseToUnicode("Escolha entre /startXadrez" + " menu: " + menu);
+					case 2:
+						switch (estadoEsperado) {
+						case 4:
+							try {
+								String cep = mensagem;
+								BuscarCEP buscarCep = BuscarCEPService.buscaEnderecoPeloCep(cep);
+								answer = EmojiParser.parseToUnicode(buscarCep.getLogradouro() + "\n" + 
+										buscarCep.getBairro() + "\n" + 
+										buscarCep.getComplemento() + "\n" + 
+										buscarCep.getLocalidade()) + "\n\nEscolha entre: \n -/startXadrez \n -/startCEP";
+								menu=0;
+								estadoEsperado = 0;
+							}catch (Exception e) {
+								answer = e.getMessage()+ "\nCEP Inválido...";
+							}break;
+						}
 					}
 					} catch (XadrezException e) {
 						answer = e.getMessage();
 					} catch (InputMismatchException e) {
 						answer = e.getMessage();
-					} finally {
+					}finally {
 						System.out.println("Recebendo mensagem: " + mensagem);
 
 						// envio de "Escrevendo" antes de enviar a resposta
