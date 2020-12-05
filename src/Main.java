@@ -13,11 +13,15 @@ import com.vdurmont.emoji.EmojiParser;
 import app.UI;
 import cep.BuscarCEP;
 import cep.service.BuscarCEPService;
+import criptomoeda.CriptoMoeda;
+import criptomoeda.service.CriptoMoedaService;
 import xadrez.Partida;
 import xadrez.PeçaXadrez;
 import xadrez.PosiçãoXadrez;
 import xadrez.XadrezException;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
@@ -39,6 +43,7 @@ public class Main {
 		// 0 - menu
 		// 1 - xadrez
 		// 2 - Consulta CEP
+		// 3 - Consulta Criptomoedas
 
 		// RespostaEsperada Xadrez
 		int estadoEsperado = 0;
@@ -46,6 +51,7 @@ public class Main {
 		// 2 - destino
 		// 3 - pomoção peão
 		// 4 - Consulta CEP
+		// 5 - Consulta Criptomoedas
 
 		// Criação do objeto bot com as informações de acesso
 		TelegramBot bot = TelegramBotAdapter.build(Config.Token);
@@ -97,8 +103,13 @@ public class Main {
 							System.out.println("CEP" + mensagem);
 							estadoEsperado = 4;
 		
+						}else if(mensagem.equals("/startCriptoMoedas")){
+							menu = 3;
+							answer = EmojiParser.parseToUnicode("\n\n" + "Informe a sigla da Criptomoeda (Exemplo BTC)");
+							estadoEsperado = 5;
 						}else {
-							answer = EmojiParser.parseToUnicode("Escolha entre: \n -/startXadrez \n -/startCEP");
+						
+							answer = EmojiParser.parseToUnicode("Escolha entre: \n -/startXadrez \n -/startCEP \n -/startCriptoMoedas");
 						}
 						break;
 					case 1: // xadrez iniciado
@@ -183,13 +194,32 @@ public class Main {
 								answer = EmojiParser.parseToUnicode(buscarCep.getLogradouro() + "\n" + 
 										buscarCep.getBairro() + "\n" + 
 										buscarCep.getComplemento() + "\n" + 
-										buscarCep.getLocalidade()) + "\n\nEscolha entre: \n -/startXadrez \n -/startCEP";
+										buscarCep.getLocalidade()) + "\n\nEscolha entre: \n -/startXadrez \n -/startCEP \n -/startCriptoMoedas";
 								menu=0;
 								estadoEsperado = 0;
 							}catch (Exception e) {
 								answer = e.getMessage()+ "\nCEP Inválido...";
 							}break;
 						}
+						break;
+					case 3:
+						switch (estadoEsperado) {
+						case 5:
+							try {
+								String criptoMoedaMessage = mensagem;
+								CriptoMoeda criptoMoeda = CriptoMoedaService.buscaCriptomoeda(criptoMoedaMessage);
+								answer = EmojiParser.parseToUnicode("O valor atual da " 
+																	+ mensagem 
+																	+ " é de " + NumberFormat.getCurrencyInstance().format(criptoMoeda.getLast()))
+																	+ "\n\nEscolha entre: \n -/startXadrez \n -/startCEP \n -/startCriptoMoedas" ;
+								menu = 0;
+								estadoEsperado = 0;
+							}catch(Exception e) {
+								answer = e.getMessage() + "\nSigla Inválida ...";
+							}
+							break;
+						}
+						break;
 					}
 					} catch (XadrezException e) {
 						answer = e.getMessage();
