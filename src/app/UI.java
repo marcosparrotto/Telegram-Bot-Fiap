@@ -86,3 +86,4 @@ public class UI {
 		return armazenaTexto;
 	}
 }
+

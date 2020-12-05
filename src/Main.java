@@ -15,9 +15,10 @@ import cep.BuscarCEP;
 import cep.service.BuscarCEPService;
 import criptomoeda.CriptoMoeda;
 import criptomoeda.service.CriptoMoedaService;
+import futebol.CampeonatoBrService;
 import xadrez.Partida;
-import xadrez.PeçaXadrez;
-import xadrez.PosiçãoXadrez;
+import xadrez.Peï¿½aXadrez;
+import xadrez.Posiï¿½ï¿½oXadrez;
 import xadrez.XadrezException;
 
 import java.text.DecimalFormat;
@@ -34,36 +35,39 @@ public class Main {
 
 		// variaveis do xadrez
 		Partida partida = new Partida();
-		List<PeçaXadrez> capturadas = new ArrayList<>();
-		PosiçãoXadrez origem = null;
-		PosiçãoXadrez destino;
+		List<Peï¿½aXadrez> capturadas = new ArrayList<>();
+		Posiï¿½ï¿½oXadrez origem = null;
+		Posiï¿½ï¿½oXadrez destino;
 
-		// Menu de opções do BOT
+		// Menu de opï¿½ï¿½es do BOT
 		int menu = 0;
 		// 0 - menu
 		// 1 - xadrez
 		// 2 - Consulta CEP
 		// 3 - Consulta Criptomoedas
+		// 4 - Campeoato Brasileiro
 
 		// RespostaEsperada Xadrez
 		int estadoEsperado = 0;
 		// 1 - origem
 		// 2 - destino
-		// 3 - pomoção peão
+		// 3 - pomoï¿½ï¿½o peï¿½o
 		// 4 - Consulta CEP
 		// 5 - Consulta Criptomoedas
+		// 50 - Tabela Campeonato
+		// 51 - Rodada do Campeonato
 
-		// Criação do objeto bot com as informações de acesso
+		// Criaï¿½ï¿½o do objeto bot com as informaï¿½ï¿½es de acesso
 		TelegramBot bot = TelegramBotAdapter.build(Config.Token);
 
-		// objeto responsável por receber as mensagens
+		// objeto responsï¿½vel por receber as mensagens
 		GetUpdatesResponse updatesResponse;
-		// objeto responsável por gerenciar o envio de respostas
+		// objeto responsï¿½vel por gerenciar o envio de respostas
 		SendResponse sendResponse;
-		// objeto responsável por gerenciar o envio de ações do chat
+		// objeto responsï¿½vel por gerenciar o envio de aï¿½ï¿½es do chat
 		BaseResponse baseResponse;
 
-		// controle de off-set, isto é, a partir deste ID será lido as mensagens
+		// controle de off-set, isto ï¿½, a partir deste ID serï¿½ lido as mensagens
 		// pendentes na fila
 		int m = 0;
 
@@ -78,10 +82,10 @@ public class Main {
 			List<Update> updates = updatesResponse.updates();
 
 			if (updates != null) {
-				// análise de cada ação da mensagem
+				// anï¿½lise de cada aï¿½ï¿½o da mensagem
 				for (Update update : updates) {
 
-					// atualização do off-set
+					// atualizaï¿½ï¿½o do off-set
 					m = update.updateId() + 1;
 					String answer = "Erro!";
 					String mensagem = update.message().text();
@@ -94,8 +98,8 @@ public class Main {
 							partida = new Partida();
 							capturadas = new ArrayList<>();
 							answer = UI.printPartida(partida, capturadas);
-							answer = EmojiParser.parseToUnicode("Vamos começar o xadrez! \n\n" + answer
-									+ "\n\nDigite a posição da peça que você gostaria de mover");
+							answer = EmojiParser.parseToUnicode("Vamos comeï¿½ar o xadrez! \n\n" + answer
+									+ "\n\nDigite a posiï¿½ï¿½o da peï¿½a que vocï¿½ gostaria de mover");
 							estadoEsperado = 1;
 						}else if(mensagem.equals("/startCEP")) {	
 							menu = 2;
@@ -107,22 +111,26 @@ public class Main {
 							menu = 3;
 							answer = EmojiParser.parseToUnicode("\n\n" + "Informe a sigla da Criptomoeda (Exemplo BTC)");
 							estadoEsperado = 5;
+						}
+						else if (mensagem.equals("/startBr")) {
+							menu = 4;
+							answer = EmojiParser.parseToUnicode("Para ver a tabela do Campeonato, digite /tabela \n Para ver uma rodada, digite /rodada");
+							estadoEsperado = 50;
 						}else {
-						
-							answer = EmojiParser.parseToUnicode("Escolha entre: \n -/startXadrez \n -/startCEP \n -/startCriptoMoedas");
+							answer = EmojiParser.parseToUnicode("Escolha entre: \n -/startXadrez \n -/startCEP \n -/startCriptoMoedas \n -/startBr");
 						}
 						break;
 					case 1: // xadrez iniciado
 						switch (estadoEsperado) {
-						case 1: // Esperando posição origem
+						case 1: // Esperando posiï¿½ï¿½o origem
 							try {
 								char coluna = mensagem.toLowerCase().charAt(0);
 								int linha = Integer.parseInt(mensagem.substring(1));
-								origem = new PosiçãoXadrez(coluna, linha);
+								origem = new Posiï¿½ï¿½oXadrez(coluna, linha);
 								boolean[][] possiveisMovimentos = partida.possiveisMovimentos(origem);
-								answer = UI.printTabuleiro(partida.getPeças(), possiveisMovimentos);
+								answer = UI.printTabuleiro(partida.getPeï¿½as(), possiveisMovimentos);
 								answer = EmojiParser.parseToUnicode(
-										answer + "\n\n" + "Digite a posição de destino");
+										answer + "\n\n" + "Digite a posiï¿½ï¿½o de destino");
 								estadoEsperado = 2;
 							} catch (XadrezException e) {
 								answer = e.getMessage()+ "\nTente novamente...";
@@ -133,14 +141,14 @@ public class Main {
 								answer = "Erro lendo posicao no Xadrez, valores validos a-h 1-8"+ "\nTente novamente...";
 							}
 							break;
-						case 2: // Esperando posição destino
+						case 2: // Esperando posiï¿½ï¿½o destino
 							try {
 								char coluna = mensagem.toLowerCase().charAt(0);
 								int linha = Integer.parseInt(mensagem.substring(1));
-								destino = new PosiçãoXadrez(coluna, linha);
-								PeçaXadrez peçaCapturada = partida.executarMovimentoXadrez(origem, destino);
-								if (peçaCapturada != null) {
-									capturadas.add(peçaCapturada);
+								destino = new Posiï¿½ï¿½oXadrez(coluna, linha);
+								Peï¿½aXadrez peï¿½aCapturada = partida.executarMovimentoXadrez(origem, destino);
+								if (peï¿½aCapturada != null) {
+									capturadas.add(peï¿½aCapturada);
 								}
 
 								if (partida.getpromovida() != null) {
@@ -152,7 +160,7 @@ public class Main {
 										menu = 0;
 										estadoEsperado = 0;
 									} else {
-										answer = answer + "\nDigite posição da peça que você gostaria de mover";
+										answer = answer + "\nDigite posiï¿½ï¿½o da peï¿½a que vocï¿½ gostaria de mover";
 										estadoEsperado = 1;
 									}
 									answer = EmojiParser.parseToUnicode(answer);
@@ -166,18 +174,18 @@ public class Main {
 								answer = "Erro lendo posicao no Xadrez, valores validos a-h 1-8"+ "\nTente novamente...";
 							}
 							break;
-						case 3: // Esperando peça promovida
+						case 3: // Esperando peï¿½a promovida
 							String type = mensagem.toUpperCase();
 							if(!type.equals("T") && !type.equals("C") && !type.equals("B") && !type.equals("D")){
-								answer = EmojiParser.parseToUnicode("Tipo não encontrado! \nEscolha entre (T/C/B/D) para promover");
+								answer = EmojiParser.parseToUnicode("Tipo nï¿½o encontrado! \nEscolha entre (T/C/B/D) para promover");
 							} else {
-								partida.alterarPeçaPromovida(type);
+								partida.alterarPeï¿½aPromovida(type);
 								answer = UI.printPartida(partida, capturadas);
 								if(partida.getCheckMate()) {
 									menu = 0;
 									estadoEsperado = 0;
 								} else {
-									answer = answer + "\nDigite posição da peça que você gostaria de mover";
+									answer = answer + "\nDigite posiï¿½ï¿½o da peï¿½a que vocï¿½ gostaria de mover";
 									estadoEsperado = 1;
 								}
 								answer = EmojiParser.parseToUnicode(answer);
@@ -198,7 +206,7 @@ public class Main {
 								menu=0;
 								estadoEsperado = 0;
 							}catch (Exception e) {
-								answer = e.getMessage()+ "\nCEP Inválido...";
+								answer = e.getMessage()+ "\nCEP Invï¿½lido...";
 							}break;
 						}
 						break;
@@ -210,16 +218,37 @@ public class Main {
 								CriptoMoeda criptoMoeda = CriptoMoedaService.buscaCriptomoeda(criptoMoedaMessage);
 								answer = EmojiParser.parseToUnicode("O valor atual da " 
 																	+ mensagem 
-																	+ " é de " + NumberFormat.getCurrencyInstance().format(criptoMoeda.getLast()))
+																	+ " ï¿½ de " + NumberFormat.getCurrencyInstance().format(criptoMoeda.getLast()))
 																	+ "\n\nEscolha entre: \n -/startXadrez \n -/startCEP \n -/startCriptoMoedas" ;
 								menu = 0;
 								estadoEsperado = 0;
 							}catch(Exception e) {
-								answer = e.getMessage() + "\nSigla Inválida ...";
+								answer = e.getMessage() + "\nSigla Invï¿½lida ...";
 							}
 							break;
 						}
 						break;
+					case 4:
+					switch (estadoEsperado) {
+						case 50:
+							if (mensagem.equalsIgnoreCase("/tabela")) {
+								answer = new StringBuilder().append("Tabela do Campeonato Brasileiro")
+										.append(System.getProperty("line.separator")).append(new CampeonatoBrService().obtemTabela())
+										.toString();
+								menu = 0;
+								estadoEsperado = 0;
+							} else if (mensagem.equalsIgnoreCase("/rodada")) {
+								answer = "Digite a rodada que vocÃª quer ver os resultados?";
+								estadoEsperado = 51;
+							}
+							break;
+						case 51:
+							answer = new CampeonatoBrService().obtemRodada(mensagem);
+							menu = 0;
+							estadoEsperado = 0;
+							break;
+						}
+						break;						
 					}
 					} catch (XadrezException e) {
 						answer = e.getMessage();
@@ -231,17 +260,15 @@ public class Main {
 						// envio de "Escrevendo" antes de enviar a resposta
 						baseResponse = bot
 								.execute(new SendChatAction(update.message().chat().id(), ChatAction.typing.name()));
-						// verificação de ação de chat foi enviada com sucesso
+						// verificaï¿½ï¿½o de aï¿½ï¿½o de chat foi enviada com sucesso
 						System.out.println("Resposta de Chat Action Enviada: " + baseResponse.isOk());
 
 						sendResponse = bot.execute(new SendMessage(update.message().chat().id(), answer));
-						// verificação de mensagem enviada com sucesso
+						// verificaï¿½ï¿½o de mensagem enviada com sucesso
 						System.out.println("Mensagem Enviada: " + sendResponse.isOk());	
 					}
 				}
 			}
-
 		}
-
 	}
 }
