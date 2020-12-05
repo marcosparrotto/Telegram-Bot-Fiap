@@ -1,11 +1,11 @@
-package xadrez.peças;
+package xadrez.pecas;
 
-import tabuleiro.Posição;
+import tabuleiro.Posicao;
 import tabuleiro.Tabuleiro;
 import xadrez.Cor;
-import xadrez.PeçaXadrez;
+import xadrez.PecaXadrez;
 
-public class Torre extends PeçaXadrez{
+public class Torre extends PecaXadrez{
 
 	public Torre(Tabuleiro tabuleiro, Cor cor) {
 		super(tabuleiro, cor);
@@ -24,45 +24,45 @@ public class Torre extends PeçaXadrez{
 	public boolean[][] possiveisMovimentos() {
 		boolean[][] mat = new boolean[getTabuleiro().getLinhas()][getTabuleiro().getColunas()];
 		
-		Posição p = new Posição(0,0);
+		Posicao p = new Posicao(0,0);
 		
 		//Acima
-		p.setValores(posição.getLinha() -1, posição.getColuna());
-		while(getTabuleiro().posiçãoExiste(p) && !getTabuleiro().existePeça(p)) {
+		p.setValores(posicao.getLinha() -1, posicao.getColuna());
+		while(getTabuleiro().posicaoExiste(p) && !getTabuleiro().existePeca(p)) {
 			mat[p.getLinha()][p.getColuna()] = true;
 			p.setLinha(p.getLinha()-1);
 		}
-		if(getTabuleiro().posiçãoExiste(p) && haPeçaOponente(p)) {
+		if(getTabuleiro().posicaoExiste(p) && haPecaOponente(p)) {
 			mat[p.getLinha()][p.getColuna()] = true;
 		}
 		
 		//Esquerda
-		p.setValores(posição.getLinha(), posição.getColuna()-1);
-		while(getTabuleiro().posiçãoExiste(p) && !getTabuleiro().existePeça(p)) {
+		p.setValores(posicao.getLinha(), posicao.getColuna()-1);
+		while(getTabuleiro().posicaoExiste(p) && !getTabuleiro().existePeca(p)) {
 			mat[p.getLinha()][p.getColuna()] = true;
 			p.setColuna(p.getColuna()-1);
 		}
-		if(getTabuleiro().posiçãoExiste(p) && haPeçaOponente(p)) {
+		if(getTabuleiro().posicaoExiste(p) && haPecaOponente(p)) {
 			mat[p.getLinha()][p.getColuna()] = true;
 		}
 		
 		//Direita
-		p.setValores(posição.getLinha(), posição.getColuna()+1);
-		while(getTabuleiro().posiçãoExiste(p) && !getTabuleiro().existePeça(p)) {
+		p.setValores(posicao.getLinha(), posicao.getColuna()+1);
+		while(getTabuleiro().posicaoExiste(p) && !getTabuleiro().existePeca(p)) {
 			mat[p.getLinha()][p.getColuna()] = true;
 			p.setColuna(p.getColuna()+1);
 		}
-		if(getTabuleiro().posiçãoExiste(p) && haPeçaOponente(p)) {
+		if(getTabuleiro().posicaoExiste(p) && haPecaOponente(p)) {
 			mat[p.getLinha()][p.getColuna()] = true;
 		}
 
 		//Baixo
-		p.setValores(posição.getLinha() +1, posição.getColuna());
-		while(getTabuleiro().posiçãoExiste(p) && !getTabuleiro().existePeça(p)) {
+		p.setValores(posicao.getLinha() +1, posicao.getColuna());
+		while(getTabuleiro().posicaoExiste(p) && !getTabuleiro().existePeca(p)) {
 			mat[p.getLinha()][p.getColuna()] = true;
 			p.setLinha(p.getLinha()+1);
 		}
-		if(getTabuleiro().posiçãoExiste(p) && haPeçaOponente(p)) {
+		if(getTabuleiro().posicaoExiste(p) && haPecaOponente(p)) {
 			mat[p.getLinha()][p.getColuna()] = true;
 		}
 		

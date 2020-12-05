@@ -3,7 +3,7 @@ package tabuleiro;
 public class Tabuleiro {
 	private int linhas;
 	private int colunas;
-	private Peça[][] peças;
+	private Peca[][] pecas;
 	
 	public Tabuleiro(int linhas, int colunas) {
 		if(linhas <1 || colunas <1) {
@@ -11,7 +11,7 @@ public class Tabuleiro {
 		}
 		this.linhas = linhas;
 		this.colunas = colunas;
-		peças = new Peça[linhas][colunas];
+		pecas = new Peca[linhas][colunas];
 	}
 
 	public int getLinhas() {
@@ -22,50 +22,50 @@ public class Tabuleiro {
 		return colunas;
 	}
 	
-	public Peça peça(int linha, int coluna) {
-		if(!posiçãoExiste(linha, coluna)) {
-			throw new TabuleiroException("Posição invalida");
+	public Peca peca(int linha, int coluna) {
+		if(!posicaoExiste(linha, coluna)) {
+			throw new TabuleiroException("Posicao invalida");
 		}
-		return peças[linha][coluna];
+		return pecas[linha][coluna];
 	}
 	
-	public Peça peça(Posição posição) {
-		return peça(posição.getLinha(),posição.getColuna());
+	public Peca peca(Posicao posicao) {
+		return peca(posicao.getLinha(),posicao.getColuna());
 	}
 	
-	public void lugarPeça(Peça peça, Posição posição) {
-		if(existePeça(posição)) {
-			throw new TabuleiroException("Já tem uma peça nessa posição");
+	public void lugarPeca(Peca peca, Posicao posicao) {
+		if(existePeca(posicao)) {
+			throw new TabuleiroException("Jï¿½ tem uma peca nessa posicao");
 		}
-		peças[posição.getLinha()][posição.getColuna()] = peça;
-		peça.posição = posição;
+		pecas[posicao.getLinha()][posicao.getColuna()] = peca;
+		peca.posicao = posicao;
 	}
 	
-	public Peça removerPeça(Posição posição) {
-		if(!posiçãoExiste(posição)) {
-			throw new TabuleiroException("Posição invalida");
+	public Peca removerPeca(Posicao posicao) {
+		if(!posicaoExiste(posicao)) {
+			throw new TabuleiroException("Posicao invalida");
 		}
-		if(peça(posição)==null) {
+		if(peca(posicao)==null) {
 			return null;
 		}
-		Peça aux = peça(posição);
-		aux.posição = null;
-		peças[posição.getLinha()][posição.getColuna()] = null;
+		Peca aux = peca(posicao);
+		aux.posicao = null;
+		pecas[posicao.getLinha()][posicao.getColuna()] = null;
 		return aux;
 	}
 	
-	public boolean posiçãoExiste(int linha, int coluna) {
+	public boolean posicaoExiste(int linha, int coluna) {
 		return linha>=0 && linha<linhas && coluna >=0 && coluna<colunas;
 	}
 	
-	public boolean posiçãoExiste(Posição posição) {
-		return posiçãoExiste(posição.getLinha(), posição.getColuna());
+	public boolean posicaoExiste(Posicao posicao) {
+		return posicaoExiste(posicao.getLinha(), posicao.getColuna());
 	}
 	
-	public boolean existePeça(Posição posição) {
-		if(!posiçãoExiste(posição)) {
-			throw new TabuleiroException("Posição invalida");
+	public boolean existePeca(Posicao posicao) {
+		if(!posicaoExiste(posicao)) {
+			throw new TabuleiroException("Posicao invalida");
 		}
-		return peça(posição) != null;
+		return peca(posicao) != null;
 	}
 }

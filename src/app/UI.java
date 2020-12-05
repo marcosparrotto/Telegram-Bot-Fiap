@@ -6,14 +6,14 @@ import java.util.stream.Collectors;
 
 import xadrez.Cor;
 import xadrez.Partida;
-import xadrez.PeçaXadrez;
+import xadrez.PecaXadrez;
 
 public class UI {
 
-	public static String printPartida(Partida partida, List<PeçaXadrez> capturadas) {
+	public static String printPartida(Partida partida, List<PecaXadrez> capturadas) {
 		String armazenaTexto = "";
-		armazenaTexto = armazenaTexto + printTabuleiro(partida.getPeças()) + "\n";
-		armazenaTexto = armazenaTexto + printPeçasCapturadas(capturadas) + "\n";
+		armazenaTexto = armazenaTexto + printTabuleiro(partida.getPecas()) + "\n";
+		armazenaTexto = armazenaTexto + printPecasCapturadas(capturadas) + "\n";
 		armazenaTexto = armazenaTexto + "Turno: " + partida.getTurno() + "\n";
 		if (!partida.getCheckMate()) {
 			armazenaTexto = armazenaTexto + "\nEsperando jogador: " + partida.getJogadorAtual();
@@ -27,12 +27,12 @@ public class UI {
 		return armazenaTexto;
 	}
 
-	public static String printTabuleiro(PeçaXadrez[][] peças) {
+	public static String printTabuleiro(PecaXadrez[][] pecas) {
 		String armazenaTexto = "";
-		for (int i = 0; i < peças.length; i++) {
+		for (int i = 0; i < pecas.length; i++) {
 			armazenaTexto = armazenaTexto + ((8 - i) + " ");
-			for (int j = 0; j < peças.length; j++) {
-				armazenaTexto = armazenaTexto + printPeça(peças[i][j], false);
+			for (int j = 0; j < pecas.length; j++) {
+				armazenaTexto = armazenaTexto + printPeca(pecas[i][j], false);
 			}
 			armazenaTexto = armazenaTexto + "\n";
 		}
@@ -40,12 +40,12 @@ public class UI {
 		return armazenaTexto;
 	}
 
-	public static String printTabuleiro(PeçaXadrez[][] peças, boolean[][] possiveisMovimentos) {
+	public static String printTabuleiro(PecaXadrez[][] pecas, boolean[][] possiveisMovimentos) {
 		String armazenaTexto = "";
-		for (int i = 0; i < peças.length; i++) {
+		for (int i = 0; i < pecas.length; i++) {
 			armazenaTexto = armazenaTexto + ((8 - i) + " ");
-			for (int j = 0; j < peças.length; j++) {
-				armazenaTexto = armazenaTexto + printPeça(peças[i][j], possiveisMovimentos[i][j]);
+			for (int j = 0; j < pecas.length; j++) {
+				armazenaTexto = armazenaTexto + printPeca(pecas[i][j], possiveisMovimentos[i][j]);
 			}
 			armazenaTexto = armazenaTexto + "\n";
 		}
@@ -53,32 +53,32 @@ public class UI {
 		return armazenaTexto;
 	}
 
-	private static String printPeça(PeçaXadrez peça, boolean corLetra) {
+	private static String printPeca(PecaXadrez peca, boolean corLetra) {
 		String armazenaTexto = "";
 		if (!corLetra) {
-			if (peça == null) {
+			if (peca == null) {
 				armazenaTexto = armazenaTexto + "\u26CB";
 			} else {
-				armazenaTexto = armazenaTexto + peça;
+				armazenaTexto = armazenaTexto + peca;
 			}
 		} else {
-			if (peça == null) {
+			if (peca == null) {
 				armazenaTexto = armazenaTexto + "\u2756";
 			} else {
-				armazenaTexto = armazenaTexto  + peça;
+				armazenaTexto = armazenaTexto  + peca;
 			}
 		}
 		armazenaTexto = armazenaTexto + " ";
 		return armazenaTexto;
 	}
 
-	private static String printPeçasCapturadas(List<PeçaXadrez> capturadas) {
+	private static String printPecasCapturadas(List<PecaXadrez> capturadas) {
 		String armazenaTexto = "";
-		List<PeçaXadrez> brancas = capturadas.stream().filter(x -> x.getCor() == Cor.Brancas)
+		List<PecaXadrez> brancas = capturadas.stream().filter(x -> x.getCor() == Cor.Brancas)
 				.collect(Collectors.toList());
-		List<PeçaXadrez> pretas = capturadas.stream().filter(x -> x.getCor() == Cor.Pretas)
+		List<PecaXadrez> pretas = capturadas.stream().filter(x -> x.getCor() == Cor.Pretas)
 				.collect(Collectors.toList());
-		armazenaTexto = armazenaTexto + "\nPeças capturadas:\n";
+		armazenaTexto = armazenaTexto + "\nPeï¿½as capturadas:\n";
 		armazenaTexto = armazenaTexto + "Brancas: ";
 		armazenaTexto = armazenaTexto + Arrays.toString(brancas.toArray());
 		armazenaTexto = armazenaTexto +"\nPretas: ";
