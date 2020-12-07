@@ -2,6 +2,10 @@ package futebol;
 
 import lombok.Data;
 
+/**
+ * Classe de Modelo de Tabela
+ */
+
 @Data
 public class TabelaModel {
     private String posicao;

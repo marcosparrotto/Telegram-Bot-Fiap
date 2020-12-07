@@ -8,8 +8,18 @@ import com.google.gson.reflect.TypeToken;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 
+/**
+ * Classe de Servico para obter informacoes relacionadas ao Campeonato Brasileiro
+ * @author Anderson Aguiar de Souza
+ * @version 1.0
+ */
 public class CampeonatoBrService {
 
+    /**
+     * Metodo para obter os dados relacionados a uma rodada especifica do campeonato
+     * @param rodada String - Numero da Rodada
+     * @return String - Dados da rodada escolhida
+     */
     public String obtemRodada(String rodada) {
         StringBuilder sb = new StringBuilder("");
 
@@ -46,6 +56,10 @@ public class CampeonatoBrService {
         return sb.toString();
     }
 
+   /**
+    * Metodo que retorna a tabela do campeonato
+    * @return String - Tabela Formatada
+    */ 
     public String obtemTabela() {
         Unirest.setTimeouts(0, 0);
         String response;
