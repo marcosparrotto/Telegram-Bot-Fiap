@@ -4,6 +4,10 @@ import java.util.List;
 
 import lombok.Data;
 
+/**
+ * Classe de Modelo de uma rodada
+ */
+
 @Data
 public class RodadaModel {
     private String nome;

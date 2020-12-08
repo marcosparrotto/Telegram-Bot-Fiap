@@ -2,6 +2,10 @@ package futebol;
 
 import lombok.Data;
 
+/**
+ * Classe de Modelo de uma Partida
+ */
+
 @Data
 public class PartidaModel {
     private String placar;
