@@ -17,9 +17,9 @@ import criptomoeda.CriptoMoeda;
  * @version 1.0 08 Dez 2020
  *  */
 public class CriptoMoedaService {
-	/**Propriedade endereço do WebService*/
+	/**Propriedade endereco do WebService*/
 	static String urlWs = "https://www.mercadobitcoin.net/api/";
-	/**Propriedade de conexão obtida com o WebService*/
+	/**Propriedade de conexao obtida com o WebService*/
 	static int sucesso = 200;
 	
 	/** Metodo que realiza a chamada da WebService https://www.mercadobitcoin.net/api/
