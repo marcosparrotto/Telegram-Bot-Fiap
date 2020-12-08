@@ -50,23 +50,23 @@ public class Main {
 		int estadoEsperado = 0;
 		// 1 - origem
 		// 2 - destino
-		// 3 - pomo��o pe�o
+		// 3 - pomocao peao
 		// 4 - Consulta CEP
 		// 5 - Consulta Criptomoedas
 		// 50 - Tabela Campeonato
 		// 51 - Rodada do Campeonato
 
-		// Cria��o do objeto bot com as informa��es de acesso
+		// Criacao do objeto bot com as informacoes de acesso
 		TelegramBot bot = TelegramBotAdapter.build(Config.Token);
 
-		// objeto respons�vel por receber as mensagens
+		// objeto responsavel por receber as mensagens
 		GetUpdatesResponse updatesResponse;
-		// objeto respons�vel por gerenciar o envio de respostas
+		// objeto responsavel por gerenciar o envio de respostas
 		SendResponse sendResponse;
-		// objeto respons�vel por gerenciar o envio de a��es do chat
+		// objeto responsavel por gerenciar o envio de acoes do chat
 		BaseResponse baseResponse;
 
-		// controle de off-set, isto �, a partir deste ID ser� lido as mensagens
+		// controle de off-set, isto e, a partir deste ID sera lido as mensagens
 		// pendentes na fila
 		int m = 0;
 
@@ -81,10 +81,10 @@ public class Main {
 			List<Update> updates = updatesResponse.updates();
 
 			if (updates != null) {
-				// an�lise de cada a��o da mensagem
+				// analise de cada acao da mensagem
 				for (Update update : updates) {
 
-					// atualiza��o do off-set
+					// atualizacaoo do off-set
 					m = update.updateId() + 1;
 					String answer = "Erro!";
 					String mensagem = update.message().text();
@@ -205,7 +205,7 @@ public class Main {
 											BuscarCEP buscarCep = BuscarCEPService.buscaEnderecoPeloCep(cep);
 											answer = EmojiParser.parseToUnicode(buscarCep.getLogradouro() + "\n"
 													+ buscarCep.getBairro() + "\n" + buscarCep.getComplemento() + "\n"
-													+ buscarCep.getLocalidade());
+													+ buscarCep.getLocalidade()) + "\n\nEscolha entre:\n -/startXadrez\n -/startCEP\n -/startCriptoMoedas\n -/startCampeonatoBrasileiro";
 											menu = 0;
 											estadoEsperado = 0;
 										} catch (Exception e) {
@@ -262,11 +262,11 @@ public class Main {
 						// envio de "Escrevendo" antes de enviar a resposta
 						baseResponse = bot
 								.execute(new SendChatAction(update.message().chat().id(), ChatAction.typing.name()));
-						// verifica��o de a��o de chat foi enviada com sucesso
+						// verificacao de acao de chat foi enviada com sucesso
 						System.out.println("Resposta de Chat Action Enviada: " + baseResponse.isOk());
 
 						sendResponse = bot.execute(new SendMessage(update.message().chat().id(), answer));
-						// verifica��o de mensagem enviada com sucesso
+						// verificacao de mensagem enviada com sucesso
 						System.out.println("Mensagem Enviada: " + sendResponse.isOk());
 					}
 				}
