@@ -12,10 +12,21 @@ import com.google.gson.JsonParser;
 
 import criptomoeda.CriptoMoeda;
 
+/** Classe que realiza a chamada da WebService https://www.mercadobitcoin.net/api/
+ * @author Rafael Ferrés
+ * @version 1.0 08 Dez 2020
+ *  */
 public class CriptoMoedaService {
+	/**Propriedade endereÃ§o do WebService*/
 	static String urlWs = "https://www.mercadobitcoin.net/api/";
+	/**Propriedade de conexÃ£o obtida com o WebService*/
 	static int sucesso = 200;
 	
+	/** Metodo que realiza a chamada da WebService https://www.mercadobitcoin.net/api/
+	 * @author Rafael Ferrés
+	 * @version 1.0 07 Dez 2020
+	 * @param singla
+	 *  */
 	public static CriptoMoeda buscaCriptomoeda(String singla) throws Exception {
 		String chamada = urlWs + singla + "/ticker/";
 		
