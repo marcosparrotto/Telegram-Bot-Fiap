@@ -13,19 +13,33 @@ import xadrez.pecas.Dama;
 import xadrez.pecas.Peao;
 import xadrez.pecas.Rei;
 import xadrez.pecas.Torre;
-
+/**
+ * Classe que contém todas as informações da partida
+ * @author Marcos Parrotto
+ * @version 1.0
+ */
 public class Partida {
+	/**Propriedade Turno = quantos movimentos foram feitos na partida*/
 	private int turno;
+	/**Propriedade que guarda a cor do jogador atual, brancas ou pretaas*/
 	private Cor jogadorAtual;
+	/**Propriedade que instancia a classe tabuleiro na partida*/
 	private Tabuleiro tabuleiro;
+	/**Propriedade que informa o status de check*/
 	private boolean check;
+	/**Propriedade que informa o status que a partida acabou*/
 	private boolean checkMate;
+	/**Propriedade que informa que um peão pode sofrer o movimento enPassant*/
 	private PecaXadrez enPassant;
+	/**Propriedade que informa que um peão está na situação de promoção = virar Dama, Cavalo, Bispo ou Torre*/
 	private PecaXadrez promovida;
 
+	/**Lista com todas as peças que estão no tabuleiro*/
 	private List<Peca> pecasNoTabuleiro = new ArrayList<>();
+	/**Lista com todas as peças que foram capturadas*/
 	private List<Peca> capturadas = new ArrayList<>();
 
+/**Inicia uma partida, com o turno 1, tabuleiro 8 por 8, jogador brancas e setupInicial das peças*/
 	public Partida() {
 		tabuleiro = new Tabuleiro(8, 8);
 		turno = 1;
@@ -33,35 +47,50 @@ public class Partida {
 		setupInicial();
 	}
 
+	 /**Recupera a turno 
+	 * @return turno*/
 	public int getTurno() {
 		return turno;
 	}
 
+	 /**Recupera a propriedade jogadorAtual
+	 * @return jogadorAtual */
 	public Cor getJogadorAtual() {
 		return jogadorAtual;
 	}
 
+	 /**Recupera a propriedade check
+	 * @return check */
 	public boolean getCheck() {
 		return check;
 	}
 
+	 /**Recupera a propriedade checkMate
+	 * @return checkMate */
 	public boolean getCheckMate() {
 		return checkMate;
 	}
 
+	 /**Recupera a propriedade enPassant
+	 * @return enPassant */
 	public PecaXadrez getEnPassant() {
 		return enPassant;
 	}
 	
+	 /**Recupera a propriedade promovida
+	 * @return promovida */
 	public PecaXadrez getpromovida() {
 		return promovida;
 	}
 
+	 /**Atualiza jogador a propriedade do jogador atual e o turno */
 	private void proximoTurno() {
 		turno++;
 		jogadorAtual = jogadorAtual == Cor.Brancas ? Cor.Pretas : Cor.Brancas;
 	}
 
+	 /**Recupera uma matriz com todas as peças do tabuleiro 
+	 * @return matriz*/
 	public PecaXadrez[][] getPecas() {
 		PecaXadrez[][] matriz = new PecaXadrez[tabuleiro.getLinhas()][tabuleiro.getColunas()];
 		for (int i = 0; i < tabuleiro.getLinhas(); i++) {
@@ -72,12 +101,18 @@ public class Partida {
 		return matriz;
 	}
 
+	/**Recupera uma matriz com todos os movimentos possiveis de uma peça 
+	 * @param posicaoOrigem
+	 * @return matriz de boleano*/
 	public boolean[][] possiveisMovimentos(PosicaoXadrez posicaoOrigem) {
 		Posicao origem = posicaoOrigem.toPosicao();
 		validarPosicaoOrigem(origem);
 		return tabuleiro.peca(origem).possiveisMovimentos();
 	}
 
+	/**Verifica e executa o movimento de uma peça e se necessario a captura/promoção 
+	 * @param posicaoOrigem, posicaoDestino
+	 * @return pecaCapturada*/
 	public PecaXadrez executarMovimentoXadrez(PosicaoXadrez posicaoOrigem, PosicaoXadrez posicaoDestino) {
 		Posicao origem = posicaoOrigem.toPosicao();
 		Posicao destino = posicaoDestino.toPosicao();
@@ -91,7 +126,7 @@ public class Partida {
 
 		PecaXadrez pecaMovida = (PecaXadrez) tabuleiro.peca(destino);
 		
-		//Promover o peï¿½o
+		//Promover o peão
 		promovida = null;
 		if(pecaMovida instanceof Peao) {
 			if((pecaMovida.getCor()==Cor.Brancas && destino.getLinha()==0) ||
@@ -188,6 +223,7 @@ public class Partida {
 		return pecaCapturada;
 	}
 
+	 /**Desfaz um movimento caso estejamos testando um chequemate ou se a pessoa está se colocando na situação de cheque */
 	private void desfazerMovimento(Posicao origem, Posicao destino, Peca pecaCapturada) {
 		PecaXadrez p = (PecaXadrez) tabuleiro.removerPeca(destino);
 		p.decrementarcontagemMovimentos();
@@ -232,33 +268,45 @@ public class Partida {
 
 	}
 
+	 /** valida se a posição informada está correta e contem uma peça
+		 * @param posicao */
 	private void validarPosicaoOrigem(Posicao posicao) {
 		if (!tabuleiro.existePeca(posicao)) {
-			throw new XadrezException("Nï¿½o hï¿½ peca nesta posicao");
+			throw new XadrezException("Nao ha peca nesta posicao");
 		}
 		if (jogadorAtual != ((PecaXadrez) tabuleiro.peca(posicao)).getCor()) {
 			throw new XadrezException("Escolha uma peca sua");
 		}
 		if (!tabuleiro.peca(posicao).haMovimentoPossivel()) {
-			throw new XadrezException("Nï¿½o hï¿½ movimentos possiveis para peca escolhida");
+			throw new XadrezException("Nao ha movimentos possiveis para peca escolhida");
 		}
 	}
 
+	 /** valida se a peça pode mover para posição de destino
+	 * @param origem, destino */
 	private void validarPosicaoDestino(Posicao origem, Posicao destino) {
 		if (!tabuleiro.peca(origem).possivelMovimento(destino)) {
-			throw new XadrezException("A peca escolhida nï¿½o pode se mover para posicao de destino");
+			throw new XadrezException("A peca escolhida nao pode se mover para posicao de destino");
 		}
 	}
 
+	 /** Insere a peça na posição informada no tabuleiro
+	 * @param coluna, linha, peca */
 	private void lugarNovaPeca(char coluna, int linha, PecaXadrez peca) {
 		tabuleiro.lugarPeca(peca, new PosicaoXadrez(coluna, linha).toPosicao());
 		pecasNoTabuleiro.add(peca);
 	}
 
+	 /** Verifica a cor do oponente com base na própria cor
+		 * @param cor
+		 * @return cor */
 	private Cor corOponente(Cor cor) {
 		return cor == Cor.Brancas ? Cor.Pretas : Cor.Brancas;
 	}
 
+	 /** Retorna o rei para verificações de cheque
+	 * @param cor
+	 * @return p */
 	private PecaXadrez Rei(Cor cor) {
 		List<Peca> list = pecasNoTabuleiro.stream().filter(x -> ((PecaXadrez) x).getCor() == cor)
 				.collect(Collectors.toList());
@@ -270,6 +318,9 @@ public class Partida {
 		throw new IllegalAccessError("Nao ha Rei da cor" + cor);
 	}
 
+	/** Testa se alguma peça esta colocando o Rei em situação de cheque
+	 * @param cor 
+	 * @return boolean */
 	private boolean testarCheck(Cor cor) {
 		Posicao reiPosicao = Rei(cor).getPosicaoXadrez().toPosicao();
 		List<Peca> pecasOponentes = pecasNoTabuleiro.stream().filter(x -> ((PecaXadrez) x).getCor() == corOponente(cor))
@@ -283,6 +334,9 @@ public class Partida {
 		return false;
 	}
 
+	/** Testa se a partida acabou (cheque mate), ou seja, não há movimento possivel que tire o rei de situação de cheque
+	 * @param cor 
+	 * @return boolean */
 	private boolean testarCheckMate(Cor cor) {
 		if (!testarCheck(cor)) {
 			return false;
@@ -308,7 +362,8 @@ public class Partida {
 		}
 		return true;
 	}
-
+    
+	/**Inicia cada peça na posição inicial*/
 	private void setupInicial() {
 
 		lugarNovaPeca('a', 2, new Peao(tabuleiro, Cor.Brancas, this));

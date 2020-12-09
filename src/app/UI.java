@@ -8,8 +8,15 @@ import xadrez.Cor;
 import xadrez.Partida;
 import xadrez.PecaXadrez;
 
+/**
+ * Classe responsável pela interação com o usuário
+ * @author Marcos Parrotto
+ * @version 1.0
+ */
 public class UI {
-
+	/**Printa a partida com o tabuleiro, as peças capturadas e informa o status da partida 
+	 * @param partida, capturadas
+	 * @return texto que será enviado pelo bot */
 	public static String printPartida(Partida partida, List<PecaXadrez> capturadas) {
 		String armazenaTexto = "";
 		armazenaTexto = armazenaTexto + printTabuleiro(partida.getPecas()) + "\n";
@@ -26,7 +33,10 @@ public class UI {
 		}
 		return armazenaTexto;
 	}
-
+	
+	/**Printa o tabuleiro simples
+	 * @param pecas
+	 * @return tabuleiro em caracteres */
 	public static String printTabuleiro(PecaXadrez[][] pecas) {
 		String armazenaTexto = "";
 		for (int i = 0; i < pecas.length; i++) {
@@ -39,7 +49,10 @@ public class UI {
 		armazenaTexto = armazenaTexto + "  a b c d e f g h\n";
 		return armazenaTexto;
 	}
-
+	
+	/**Printa o tabuleiro com os possiveis movimentos de uma peça
+	 * @param pecas, possiveisMovimentos
+	 * @return tabuleiro em caracteres */
 	public static String printTabuleiro(PecaXadrez[][] pecas, boolean[][] possiveisMovimentos) {
 		String armazenaTexto = "";
 		for (int i = 0; i < pecas.length; i++) {
@@ -53,6 +66,9 @@ public class UI {
 		return armazenaTexto;
 	}
 
+	/**Printa cada peça do tabuleiro
+	 * @param pecas, corLetra
+	 * @return retorna o caracter/emoji para ser colocado no tabuleiro */
 	private static String printPeca(PecaXadrez peca, boolean corLetra) {
 		String armazenaTexto = "";
 		if (!corLetra) {
@@ -71,7 +87,10 @@ public class UI {
 		armazenaTexto = armazenaTexto + " ";
 		return armazenaTexto;
 	}
-
+	
+	/**Printa lista das peças capturadas por cada jogador
+	 * @param capturadas
+	 * @return texto com as peças capturadas por cadda jogador */
 	private static String printPecasCapturadas(List<PecaXadrez> capturadas) {
 		String armazenaTexto = "";
 		List<PecaXadrez> brancas = capturadas.stream().filter(x -> x.getCor() == Cor.Brancas)

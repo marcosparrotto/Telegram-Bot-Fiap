@@ -1,8 +1,15 @@
 package tabuleiro;
-
+/**
+ * Classe tabuleiro
+ * @author Marcos Parrotto
+ * @version 1.0
+ */
 public class Tabuleiro {
+	/** quantidade de linhas do tabuleiro */
 	private int linhas;
+	/** quantidade de colunas do tabuleiro */
 	private int colunas;
+	/** matriz com as peças do tabuleiro */
 	private Peca[][] pecas;
 	
 	public Tabuleiro(int linhas, int colunas) {
@@ -14,14 +21,21 @@ public class Tabuleiro {
 		pecas = new Peca[linhas][colunas];
 	}
 
+	 /**Recupera a propriedade 
+	 * @return linhas */
 	public int getLinhas() {
 		return linhas;
 	}
 
+	 /**Recupera a propriedade colunas
+	 * @return colunas */
 	public int getColunas() {
 		return colunas;
 	}
 	
+	/**Recupera uma peça que esta em uma determinada linha e coluna no tabuleiro
+	 * @param linha, coluna
+	 * @return Peca */
 	public Peca peca(int linha, int coluna) {
 		if(!posicaoExiste(linha, coluna)) {
 			throw new TabuleiroException("Posicao invalida");
@@ -29,18 +43,25 @@ public class Tabuleiro {
 		return pecas[linha][coluna];
 	}
 	
+	/**Recupera uma peça que esta em uma determinada posição no tabuleiro
+	 * @param posicao
+	 * @return Peca */
 	public Peca peca(Posicao posicao) {
 		return peca(posicao.getLinha(),posicao.getColuna());
 	}
 	
+	/** coloca uma peça numa determinada posição do tabuleiro
+	 * @param peca, posicao */
 	public void lugarPeca(Peca peca, Posicao posicao) {
 		if(existePeca(posicao)) {
-			throw new TabuleiroException("Jï¿½ tem uma peca nessa posicao");
+			throw new TabuleiroException("Ja tem uma peca nessa posicao");
 		}
 		pecas[posicao.getLinha()][posicao.getColuna()] = peca;
 		peca.posicao = posicao;
 	}
 	
+	/** Remove uma peca de uma determinada posicao e retorna a peca removida (capturada)
+	 * @return Peca */
 	public Peca removerPeca(Posicao posicao) {
 		if(!posicaoExiste(posicao)) {
 			throw new TabuleiroException("Posicao invalida");
@@ -54,14 +75,17 @@ public class Tabuleiro {
 		return aux;
 	}
 	
+	/** verifica as coordenadas informadas existem no tabuleiro */
 	public boolean posicaoExiste(int linha, int coluna) {
 		return linha>=0 && linha<linhas && coluna >=0 && coluna<colunas;
 	}
 	
+	/** verifica a posição informada existe no tabuleiro */
 	public boolean posicaoExiste(Posicao posicao) {
 		return posicaoExiste(posicao.getLinha(), posicao.getColuna());
 	}
 	
+	/** verifica a posição contem peça */
 	public boolean existePeca(Posicao posicao) {
 		if(!posicaoExiste(posicao)) {
 			throw new TabuleiroException("Posicao invalida");

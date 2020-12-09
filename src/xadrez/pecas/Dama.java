@@ -5,6 +5,11 @@ import tabuleiro.Tabuleiro;
 import xadrez.Cor;
 import xadrez.PecaXadrez;
 
+/**
+ * Classe da peça Dama
+ * @author Marcos Parrotto
+ * @version 1.0
+ */
 public class Dama extends PecaXadrez{
 
 	public Dama(Tabuleiro tabuleiro, Cor cor) {

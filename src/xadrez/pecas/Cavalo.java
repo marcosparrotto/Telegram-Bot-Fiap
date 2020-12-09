@@ -5,6 +5,11 @@ import tabuleiro.Tabuleiro;
 import xadrez.Cor;
 import xadrez.PecaXadrez;
 
+/**
+ * Classe da peça cavalo
+ * @author Marcos Parrotto
+ * @version 1.0
+ */
 public class Cavalo extends PecaXadrez {
 
 	public Cavalo(Tabuleiro tabuleiro, Cor cor) {

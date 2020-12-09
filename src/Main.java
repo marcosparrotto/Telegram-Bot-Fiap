@@ -38,7 +38,7 @@ public class Main {
 		PosicaoXadrez origem = null;
 		PosicaoXadrez destino;
 
-		// Menu de op��es do BOT
+		// Menu de opcoes do BOT
 		int menu = 0;
 		// 0 - menu
 		// 1 - xadrez
@@ -97,7 +97,7 @@ public class Main {
 									partida = new Partida();
 									capturadas = new ArrayList<>();
 									answer = UI.printPartida(partida, capturadas);
-									answer = EmojiParser.parseToUnicode("Vamos começar o xadrez! \n\n" + answer
+									answer = EmojiParser.parseToUnicode("Vamos come�ar o xadrez! \n\n" + answer
 											+ "\n\nDigite a posicao da peca que você gostaria de mover");
 									estadoEsperado = 1;
 								} else if (mensagem.equals("/startCEP")) {

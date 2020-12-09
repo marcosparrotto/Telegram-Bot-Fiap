@@ -5,6 +5,11 @@ import tabuleiro.Tabuleiro;
 import xadrez.Cor;
 import xadrez.PecaXadrez;
 
+/**
+ * Classe da peça torre
+ * @author Marcos Parrotto
+ * @version 1.0
+ */
 public class Torre extends PecaXadrez{
 
 	public Torre(Tabuleiro tabuleiro, Cor cor) {

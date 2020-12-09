@@ -6,6 +6,11 @@ import xadrez.Cor;
 import xadrez.Partida;
 import xadrez.PecaXadrez;
 
+/**
+ * Classe da peça Rei
+ * @author Marcos Parrotto
+ * @version 1.0
+ */
 public class Rei extends PecaXadrez {
 
 	private Partida partida;

@@ -5,6 +5,11 @@ import tabuleiro.Tabuleiro;
 import xadrez.Cor;
 import xadrez.PecaXadrez;
 
+/**
+ * Classe da peça bispo
+ * @author Marcos Parrotto
+ * @version 1.0
+ */
 public class Bispo extends PecaXadrez {
 
 	public Bispo(Tabuleiro tabuleiro, Cor cor) {
