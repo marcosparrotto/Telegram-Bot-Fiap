@@ -1,7 +1,7 @@
 # Telegram-Bot-Fiap
 
 Menu:
-1- Jogo de Xadrez
+1- Jogo de Xadrez<br>
 2- Consulta CEP
 3- Consulta Criptomoedas
 4- Campeoato Brasileiro
